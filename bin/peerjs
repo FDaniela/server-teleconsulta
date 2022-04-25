@@ -22,7 +22,7 @@ const opts = yargs
       demandOption: false,
       alias: "c",
       describe: "concurrent limit",
-      default: 5000
+      default: 1500000
     },
     alive_timeout: {
       demandOption: false,
