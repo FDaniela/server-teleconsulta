@@ -16,18 +16,18 @@ const opts = yargs
       demandOption: false,
       alias: "t",
       describe: "timeout (milliseconds)",
-      default: 5000
+      default: 600000
     },
     concurrent_limit: {
       demandOption: false,
       alias: "c",
       describe: "concurrent limit",
-      default: 5000
+      default: 50000
     },
     alive_timeout: {
       demandOption: false,
       describe: "broken connection check timeout (milliseconds)",
-      default: 600000
+      default: 6000000
     },
     key: {
       demandOption: false,
