@@ -8,10 +8,6 @@
 
 PeerServer helps establishing connections between PeerJS clients. Data is not proxied through the server.
 
-Run your own server on Gitpod!
-
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/peers/peerjs-server)
-
 ### [https://peerjs.com](https://peerjs.com)
 
 ## Usage
@@ -39,12 +35,6 @@ If you don't want to develop anything, just enter few commands below.
 Also, you can use Docker image to run a new container:
 ```sh
 $ docker run -p 9000:9000 -d peerjs/peerjs-server
-```
-
-##### Kubernetes
-
-```sh
-$ kubectl run peerjs-server --image=peerjs/peerjs-server --port 9000 --expose -- --port 9000 --path /myapp
 ```
 
 ### Create a custom server:
@@ -221,16 +211,6 @@ when the peer can no longer be reached.
 peerServer.on('disconnect', (client) => { ... });
 ```
 
-## HTTP API
-
-Read [/src/api/README.md](src/api/README.md)
-
-## Running tests
-
-```sh
-$ npm test
-```
-
 ## Docker
 
 We have 'ready to use' images on docker hub:
@@ -256,74 +236,3 @@ This will start a peerjs server on port 9000 exposed on port 9000 with key `peer
 
 Open your browser with http://localhost:9000/myapp It should returns JSON with name, description and website fields. http://localhost:9000/myapp/peerjs/id - should returns a random string (random client id)
 
-## Running in Google App Engine
-
-Google App Engine will create an HTTPS certificate for you automatically,
-making this by far the easiest way to deploy PeerJS in the Google Cloud
-Platform.
-
-1. Create a `package.json` file for GAE to read:
-
-```sh
-echo "{}" > package.json
-npm install express@latest peer@latest
-```
-
-2. Create an `app.yaml` file to configure the GAE application.
-
-```yaml
-runtime: nodejs
-
-# Flex environment required for WebSocket support, which is required for PeerJS.
-env: flex
-
-# Limit resources to one instance, one CPU, very little memory or disk.
-manual_scaling:
-  instances: 1
-resources:
-  cpu: 1
-  memory_gb: 0.5
-  disk_size_gb: 0.5
-```
-
-3. Create `server.js` (which node will run by default for the `start` script):
-
-```js
-const express = require('express');
-const { ExpressPeerServer } = require('peer');
-const app = express();
-
-app.enable('trust proxy');
-
-const PORT = process.env.PORT || 9000;
-const server = app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-  console.log('Press Ctrl+C to quit.');
-});
-
-const peerServer = ExpressPeerServer(server, {
-  path: '/'
-});
-
-app.use('/', peerServer);
-
-module.exports = app;
-```
-
-4. Deploy to an existing GAE project (assuming you are already logged in via
-`gcloud`), replacing `YOUR-PROJECT-ID-HERE` with your particular project ID:
-
-```sh
-gcloud app deploy --project=YOUR-PROJECT-ID-HERE --promote --quiet app.yaml
-```
-
-## Privacy
-
-See [PRIVACY.md](https://github.com/peers/peerjs-server/blob/master/PRIVACY.md)
-
-## Problems?
-
-Discuss PeerJS on our Telegram chat:
-https://t.me/joinchat/ENhPuhTvhm8WlIxTjQf7Og
-
-Please post any bugs as a Github issue.
