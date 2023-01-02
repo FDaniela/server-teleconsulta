@@ -28,12 +28,6 @@ If you don't want to develop anything, just enter few commands below.
     ```
 3. Check it: http://127.0.0.1:9000/myapp It should returns JSON with name, description and website fields.
 
-#### Docker
-
-Also, you can use Docker image to run a new container:
-```sh
-$ docker run -p 9000:9000 -d peerjs/peerjs-server
-```
 
 ### Create a custom server:
 If you have your own server, you can attach PeerServer.
@@ -86,55 +80,6 @@ You can provide config object to `PeerServer` function or specify options for `p
 | `--allow_discovery` | `allow_discovery` |  Allow to use GET `/peers` http API method to get an array of ids of all connected clients (boolean) | No |  |
 |  | `generateClientId` | A function which generate random client IDs when calling `/id` API method (`() => string`) | No | `uuid/v4` |
 
-## Using HTTPS
-Simply pass in PEM-encoded certificate and key.
-
-```javascript
-const fs = require('fs');
-const { PeerServer } = require('peer');
-
-const peerServer = PeerServer({
-  port: 9000,
-  ssl: {
-    key: fs.readFileSync('/path/to/your/ssl/key/here.key'),
-    cert: fs.readFileSync('/path/to/your/ssl/certificate/here.crt')
-  }
-});
-```
-
-You can also pass any other [SSL options accepted by https.createServer](https://nodejs.org/api/https.html#https_https_createserver_options_requestlistenerfrom), such as `SNICallback:
-
-```javascript
-const fs = require('fs');
-const { PeerServer } = require('peer');
-
-const peerServer = PeerServer({
-  port: 9000,
-  ssl: {
-    SNICallback: (servername, cb) => {
-        // your code here ....
-    }
-  }
-});
-```
-
-
-## Running PeerServer behind a reverse proxy
-
-Make sure to set the `proxied` option, otherwise IP based limiting will fail.
-The option is passed verbatim to the
-[expressjs `trust proxy` setting](http://expressjs.com/4x/api.html#app-settings)
-if it is truthy.
-
-```javascript
-const { PeerServer } = require('peer');
-
-const peerServer = PeerServer({
-  port: 9000,
-  path: '/myapp',
-  proxied: true
-});
-```
 
 ## Custom client ID generation
 By default, PeerServer uses `uuid/v4` npm package to generate random client IDs.
@@ -209,28 +154,4 @@ when the peer can no longer be reached.
 peerServer.on('disconnect', (client) => { ... });
 ```
 
-## Docker
-
-We have 'ready to use' images on docker hub:
-https://hub.docker.com/r/peerjs/peerjs-server
-
-
-To run the latest image:  
-```sh
-$ docker run -p 9000:9000 -d peerjs/peerjs-server
-```
-
-You can build a new image simply by calling:
-```sh
-$ docker build -t myimage https://github.com/peers/peerjs-server.git
-```
-
-To run the image execute this:  
-```sh
-$ docker run -p 9000:9000 -d myimage
-```
-
-This will start a peerjs server on port 9000 exposed on port 9000 with key `peerjs` on path `/myapp`.
-
-Open your browser with http://localhost:9000/myapp It should returns JSON with name, description and website fields. http://localhost:9000/myapp/peerjs/id - should returns a random string (random client id)
 
